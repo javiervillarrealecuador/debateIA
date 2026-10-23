@@ -66,10 +66,11 @@ services:
       - "8000"
     networks:
       - debateia_net
+      - coolify
     labels:
       - "coolify.managed=true"
-      # Configuración de Proxy Inverso Traefik para WebSockets en Coolify
       - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
       - "traefik.http.routers.debateia-backend.rule=Host(`${BACKEND_DOMAIN:-api.debateia.local}`)"
       - "traefik.http.routers.debateia-backend.entrypoints=websecure"
       - "traefik.http.routers.debateia-backend.tls=true"
@@ -96,9 +97,11 @@ services:
       - "3000"
     networks:
       - debateia_net
+      - coolify
     labels:
       - "coolify.managed=true"
       - "traefik.enable=true"
+      - "traefik.docker.network=coolify"
       - "traefik.http.routers.debateia-frontend.rule=Host(`${FRONTEND_DOMAIN:-debateia.local}`)"
       - "traefik.http.routers.debateia-frontend.entrypoints=websecure"
       - "traefik.http.routers.debateia-frontend.tls=true"
@@ -114,3 +117,5 @@ volumes:
 networks:
   debateia_net:
     driver: bridge
+  coolify:
+    external: true
