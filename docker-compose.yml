@@ -60,7 +60,6 @@ services:
       GOOGLE_SERVICE_ACCOUNT_B64: ${GOOGLE_SERVICE_ACCOUNT_B64:-}
       GOOGLE_APPLICATION_CREDENTIALS: /app/service_account.json
     volumes:
-      - ./candidate_profile.npy:/app/candidate_profile.npy:ro
       - torch_cache:/root/.cache
     expose:
       - "8000"
