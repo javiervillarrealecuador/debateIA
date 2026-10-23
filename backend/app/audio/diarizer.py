@@ -19,24 +19,29 @@ class SpeakerClassifier:
         self.load_candidate_profile()
 
     def load_candidate_profile(self) -> bool:
-        if self.profile_path.exists():
-            try:
-                emb = np.load(str(self.profile_path))
-                norm = np.linalg.norm(emb)
-                if norm > 0:
-                    self.candidate_profile = emb / norm
-                else:
-                    self.candidate_profile = emb
-                print(f"[BIOMETRÍA] Perfil de voz cargado desde: {self.profile_path}")
-                return True
-            except Exception as e:
-                print(f"[BIOMETRÍA] Error al leer {self.profile_path}: {e}")
-                self.candidate_profile = None
-                return False
-        else:
-            print(f"[BIOMETRÍA] Advertencia: Perfil de voz {self.profile_path} no encontrado.")
-            self.candidate_profile = None
-            return False
+        possible_paths = [
+            self.profile_path,
+            Path("/app/candidate_profile.npy"),
+            Path("candidate_profile.npy"),
+            Path("../candidate_profile.npy"),
+        ]
+        for p in possible_paths:
+            if p.exists():
+                try:
+                    emb = np.load(str(p))
+                    norm = np.linalg.norm(emb)
+                    if norm > 0:
+                        self.candidate_profile = emb / norm
+                    else:
+                        self.candidate_profile = emb
+                    print(f"[BIOMETRÍA] Perfil de voz cargado con éxito desde: {p}")
+                    return True
+                except Exception as e:
+                    print(f"[BIOMETRÍA] Error al leer {p}: {e}")
+
+        print(f"[BIOMETRÍA] Advertencia: Perfil de voz no encontrado en ninguna ruta.")
+        self.candidate_profile = None
+        return False
 
     def classify(self, audio_16k_float: np.ndarray) -> Tuple[str, float]:
         """
