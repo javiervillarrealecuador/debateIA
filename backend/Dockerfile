@@ -24,13 +24,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 
 RUN pip install --upgrade pip && \
-    pip install torch==2.2.2 torchaudio==2.2.2 --extra-index-url https://download.pytorch.org/whl/cpu && \
+    pip install torch torchaudio --index-url https://download.pytorch.org/whl/cpu && \
     pip install -r requirements.txt
-
-# Pre-descarga de modelos para evitar descargas en tiempo de arranque (Cold Start = 0)
-RUN python -c "import torch; torch.hub.load('snakers4/silero-vad', 'silero_vad', force_reload=False, trust_repo=True)" && \
-    python -c "from faster_whisper import WhisperModel; WhisperModel('base', device='cpu', compute_type='int8')" && \
-    python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2', device='cpu')"
 
 # Copiar código fuente
 COPY . .
