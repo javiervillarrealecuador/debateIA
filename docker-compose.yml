@@ -69,13 +69,6 @@ services:
       - coolify
     labels:
       - "coolify.managed=true"
-      - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
-      - "traefik.http.routers.debateia-backend.rule=Host(`${BACKEND_DOMAIN:-api.debateia.local}`)"
-      - "traefik.http.routers.debateia-backend.entrypoints=websecure"
-      - "traefik.http.routers.debateia-backend.tls=true"
-      - "traefik.http.routers.debateia-backend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.debateia-backend.loadbalancer.server.port=8000"
 
   # ----------------------------------------------------------------------------
   # FRONTEND PWA: Next.js 14 Standalone Teleprompter UI
@@ -100,13 +93,6 @@ services:
       - coolify
     labels:
       - "coolify.managed=true"
-      - "traefik.enable=true"
-      - "traefik.docker.network=coolify"
-      - "traefik.http.routers.debateia-frontend.rule=Host(`${FRONTEND_DOMAIN:-debateia.local}`)"
-      - "traefik.http.routers.debateia-frontend.entrypoints=websecure"
-      - "traefik.http.routers.debateia-frontend.tls=true"
-      - "traefik.http.routers.debateia-frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.services.debateia-frontend.loadbalancer.server.port=3000"
 
 volumes:
   pgvector_data:
